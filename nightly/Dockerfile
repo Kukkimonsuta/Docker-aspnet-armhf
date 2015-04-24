@@ -25,6 +25,7 @@ RUN LIBUV_VERSION=1.4.2 \
 	&& cd /usr/local/src/libuv-$LIBUV_VERSION \
 	&& sh autogen.sh && ./configure && make && make install \
 	&& rm -rf /usr/local/src/libuv-$LIBUV_VERSION \
+	&& cd ~ \
 	&& ldconfig
 
 COPY NuGet.Config /tmp/
