@@ -7,7 +7,7 @@ MAINTAINER Lukas Novotny <lukas@dramiel.com>
 ENV DNX_FEED https://www.myget.org/F/aspnetvnext/api/v2
 ENV DNX_USER_HOME /opt/dnx
 
-RUN apt-get -qq update && apt-get -qqy install unzip
+RUN apt-get -qq update && apt-get -qqy install unzip curl
 
 ONBUILD RUN curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
 ONBUILD RUN bash -c "source $DNX_USER_HOME/dnvm/dnvm.sh \
