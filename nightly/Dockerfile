@@ -1,4 +1,4 @@
-FROM kukkimonsuta/armhf-mono:3.12
+FROM kukkimonsuta/armhf-mono:4.1
 
 MAINTAINER Lukas Novotny <lukas@dramiel.com>
 
@@ -9,13 +9,12 @@ ENV DNX_USER_HOME /opt/dnx
 
 RUN apt-get -qq update && apt-get -qqy install unzip curl
 
-ONBUILD RUN curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
-ONBUILD RUN bash -c "source $DNX_USER_HOME/dnvm/dnvm.sh \
-	&& dnvm install latest -a default \
-	&& dnvm alias default | xargs -i ln -s $DNX_USER_HOME/runtimes/{} $DNX_USER_HOME/runtimes/default"
+# Install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash - \
+	&& apt-get install -y nodejs
 
 # Install libuv for Kestrel from source code (binary is not in wheezy and one in jessie is still too old)
-RUN apt-get -qqy install \
+RUN apt-get -qy install \
 	autoconf \
 	automake \
 	build-essential \
@@ -27,6 +26,11 @@ RUN LIBUV_VERSION=1.4.2 \
 	&& rm -rf /usr/local/src/libuv-$LIBUV_VERSION \
 	&& cd ~ \
 	&& ldconfig
+
+ONBUILD RUN curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
+ONBUILD RUN bash -c "source $DNX_USER_HOME/dnvm/dnvm.sh \
+	&& dnvm install latest -a default \
+	&& dnvm alias default | xargs -i ln -s $DNX_USER_HOME/runtimes/{} $DNX_USER_HOME/runtimes/default"
 
 COPY NuGet.Config /tmp/
 RUN mkdir -p $HOME/.config/NuGet/ && mv /tmp/NuGet.Config $HOME/.config/NuGet/
