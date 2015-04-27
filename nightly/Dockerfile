@@ -9,9 +9,12 @@ ENV DNX_USER_HOME /opt/dnx
 
 RUN apt-get -qq update && apt-get -qqy install unzip curl
 
-# Install nodejs
+# Install nodejs, grunt, gulp and bower
 RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash - \
-	&& apt-get install -y nodejs
+	&& apt-get install -y nodejs \
+	&& npm install -g bower \
+	&& npm install -g gulp-cli \
+	&& npm install -g grunt-cli
 
 # Install libuv for Kestrel from source code (binary is not in wheezy and one in jessie is still too old)
 RUN apt-get -qy install \
